@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+    <script src="jquery.js"></script>
+    <script>
+        var recPID;
+
+        $(document).ready(function () {
+            $("#startRec").click(function () {
+                var myFileName = $("#filename").val();
+                var myFilePath = $("#filepath").val();
+                var myDomainPath = $("#domainPath").val();
+                // 壓測 nodejs ffmpeg 多條 效能
+                // for(var i =0; i <= 30; i++){
+                //     $.post("http://localhost:1985/startRec",
+                //     {
+                //         filename: myFileName + i,
+                //         filepath: myFilePath,
+                //         domainPath: myDomainPath
+                //     },
+                //     function (data, status) {
+                //         console.log("數據：" + data + "\n狀態：" + status);
+                //         recPID = data;
+                //         console.log("recPID = " + recPID);
+                //     });
+                // }
+                $.post("http://localhost:1985/startRec",
+                    {
+                        filename: myFileName,
+                        filepath: myFilePath,
+                        domainPath: myDomainPath
+                    },
+                    function (data, status) {
+                        console.log("數據：" + data + "\n狀態：" + status);
+                        recPID = data;
+                        $("#recPid").val(data);
+                        console.log("recPID = " + recPID);
+                    });
+            });
+
+            $("#stopRec").click(function () {
+                $.post("http://localhost:1985/stopRec",
+                    {
+                        pid: recPID
+
+                    },
+                    function (data, status) {
+                        alert("數據：" + data + "\n數據：" + status);
+                    });
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+    <form name="form1">
+        RTMP source domain path:<input id="domainPath" type="text" name="domainPath" value=""><br />
+        Record filepath:<input id="filepath" type="text" name="filepath" value=""><br />
+        Record filename:<input id="filename" type="text" name="filename" value=""><br />
+    </form>
+    <button id="startRec">send startRec</button>
+    <form name="form1">
+        get PID:<input id="recPid" type="text" name="recPid" value=""><br />
+    </form>
+    <button id="stopRec">send stopRec</button>
+</body>
+
+</html>

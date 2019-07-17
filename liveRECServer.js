@@ -39,9 +39,10 @@ app.post('/startRec', function (req, res) {
     var that = this;
     console.log('data POST from startRec');
     console.log('get file name set = ' + req.body.filename);
+    console.log('get file path set = ' + req.body.filepath);
     console.log('record rtmp from = ' + req.body.domainPath);
     that.myShellResult='';
-    var sh = spawn('sh', ['startRec.sh', req.body.filename, req.body.domainPath],{detached: true});
+    var sh = spawn('sh', ['startRec.sh',req.body.filepath, req.body.filename, req.body.domainPath],{detached: true});
     sh.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
       that.myShellResult= `${data}`;
